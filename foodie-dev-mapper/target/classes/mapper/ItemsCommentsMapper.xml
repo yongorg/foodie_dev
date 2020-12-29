@@ -1,19 +1,62 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.imooc.mapper.ItemsCommentsMapper" >
-  <resultMap id="BaseResultMap" type="com.imooc.pojo.ItemsComments" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" property="id" jdbcType="VARCHAR" />
-    <result column="user_id" property="userId" jdbcType="VARCHAR" />
-    <result column="item_id" property="itemId" jdbcType="VARCHAR" />
-    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
-    <result column="item_spec_id" property="itemSpecId" jdbcType="VARCHAR" />
-    <result column="sepc_name" property="sepcName" jdbcType="VARCHAR" />
-    <result column="comment_level" property="commentLevel" jdbcType="INTEGER" />
-    <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
-    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
-  </resultMap>
+<mapper namespace="com.imooc.mapper.ItemsCommentsMapper">
+    <resultMap id="BaseResultMap" type="com.imooc.pojo.ItemsComments">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="item_id" property="itemId" jdbcType="VARCHAR"/>
+        <result column="item_name" property="itemName" jdbcType="VARCHAR"/>
+        <result column="item_spec_id" property="itemSpecId" jdbcType="VARCHAR"/>
+        <result column="sepc_name" property="sepcName" jdbcType="VARCHAR"/>
+        <result column="comment_level" property="commentLevel" jdbcType="INTEGER"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="created_time" property="createdTime" jdbcType="TIMESTAMP"/>
+        <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <resultMap id="myCommentLevel" type="com.imooc.pojo.vo.CommentLevelCountsVO2">
+        <result column="commentLevel" property="commentLevel" jdbcType="INTEGER"/>
+        <result column="counts" property="counts" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="levelCounts" resultMap="myCommentLevel" parameterType="String">
+        SELECT
+          comment_level as commentLevel,
+          count(*) as counts
+        FROM items_comments
+        WHERE item_id =#{itemId}
+        GROUP BY comment_level
+    </select>
+
+    <resultMap id="myItemComments" type="com.imooc.pojo.vo.ItemCommentVO">
+        <result column="commentLevel" property="commentLevel" jdbcType="INTEGER"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="specName" property="specName" jdbcType="VARCHAR"/>
+        <result column="createdTime" property="createdTime" jdbcType="TIMESTAMP"/>
+        <result column="userFace" property="userFace" jdbcType="VARCHAR"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="queryItemComments" resultMap="myItemComments" parameterType="Map">
+        SELECT
+            ic.comment_level as commentLevel,
+            ic.content,
+            ic.sepc_name as sepcName,
+            ic.created_time as createdTime,
+            u.face  as userFace,
+            u.nickname
+
+        FROM items_comments  ic
+        LEFT JOIN users u
+        ON ic.user_id = u.id
+        WHERE ic.item_id = #{map.itemId}
+            <if test="map.level != null and map.level != '' ">
+                AND ic.comment_level = #{map.level}
+            </if>
+    </select>
+
 </mapper>

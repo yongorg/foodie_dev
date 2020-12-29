@@ -1,6 +1,6 @@
 package com.imooc.controller;
 
-import com.imooc.common.utils.IMOOCJSONResult;
+import com.imooc.common.utils.JSONResult;
 import com.imooc.pojo.Stu;
 import com.imooc.service.StuService;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class HelloController {
         session.getAttribute("userInfo");
         // 移除session  Attribute
         // session.removeAttribute("userInfo");
-        return IMOOCJSONResult.ok();
+        return JSONResult.ok();
     }
 
 
@@ -49,6 +49,6 @@ public class HelloController {
         log.info("info-------------------");
         log.warn("warn-------------------");
         log.error("error-------------------");
-        return IMOOCJSONResult.ok();
+        return JSONResult.ok();
     }
 }
