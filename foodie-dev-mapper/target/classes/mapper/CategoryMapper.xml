@@ -41,8 +41,8 @@
                 f.type as type,
                 f.father_id as fatherId,
                 s.id as subId,
-                s.`name` as `name`,
-                s.type as type,
+                s.`name` as subName,
+                s.type as subType,
                 s.father_id as subFatherId
             FROM
                 category f
@@ -50,7 +50,7 @@
                 category s
             On
                 f.id = s.father_id
-            and
+            WHERE
                 f.father_id = #{rootId}
     </select>
 

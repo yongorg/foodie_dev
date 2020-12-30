@@ -1,5 +1,7 @@
 package com.imooc.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.imooc.common.enums.CommentLevel;
 import com.imooc.common.utils.DesensitizationUtil;
 import com.imooc.common.utils.PagedGridResult;
@@ -161,25 +163,26 @@ public class ItemServiceImpl implements ItemService {
          * page: 第几页
          * pageSize: 每页显示条数
          */
-        //PageHelper.startPage(page, pageSize);
+        PageHelper.startPage(page, pageSize);
 
         List<ItemCommentVO> list = itemsCommentsMapper.queryItemComments(map);
 
-        log.info(list.toString());
+        //log.info(list.toString());
 
-        for (ItemCommentVO vo : list) {
-            vo.setNickname(DesensitizationUtil.commonDisplay(vo.getNickname()));
-        }
+        // 脱敏
+        list.forEach(itemCommentVO ->
+                itemCommentVO.setNickname(DesensitizationUtil.commonDisplay(itemCommentVO.getNickname())));
+
 
         return setterPagedGrid(list, page);
     }
     private PagedGridResult setterPagedGrid(List<?> list, Integer page) {
-        //PageInfo<?> pageList = new PageInfo<>(list);
+        PageInfo<?> pageList = new PageInfo<>(list);
         PagedGridResult grid = new PagedGridResult();
         grid.setPage(page);
         grid.setRows(list);
-        //grid.setTotal(pageList.getPages());
-        //grid.setRecords(pageList.getTotal());
+        grid.setTotal(pageList.getPages());
+        grid.setRecords(pageList.getTotal());
         return grid;
     }
 }
