@@ -40,8 +40,8 @@ spring:
 mybatis:
   type-aliases-package: com.imooc.mapper          # 所有POJO类所在包路径
   mapper-locations: classpath:mapper/*.xml      # mapper映射文件
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # mybatis日志
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # mybatis日志
 
 ############################################################
 #
